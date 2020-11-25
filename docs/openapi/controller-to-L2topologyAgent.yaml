@@ -7,32 +7,6 @@ servers:
   - url: 'https://mnms.controller:8787/api'
 security:
   - bearerAuth: []
-tags:
-- name: "Login"
-  description: "login and logout users."
-  externalDocs:
-    description: "More info."
-    url: "https://github.com/amar-ox/nms-microservice"
-- name: "Subnet"
-  description: "get and configure topology subnets."
-  externalDocs:
-    description: "More info."
-    url: "https://github.com/amar-ox/nms-microservice"
-- name: "Node"
-  description: "get and update the list of L2 nodes of the topology."
-  externalDocs:
-    description: "More info."
-    url: "https://github.com/amar-ox/nms-microservice"
-- name: "Link Termination Point (LTP)"
-  description: "get and update inforamtion about the LTPs of each node."
-  externalDocs:
-    description: "More info."
-    url: "https://github.com/amar-ox/nms-microservice"
-- name: "Link"
-  description: "get and update physical links."
-  externalDocs:
-    description: "More info."
-    url: "https://github.com/amar-ox/nms-microservice"
 paths:
   /login/agent:
     post:
@@ -100,7 +74,7 @@ paths:
                 $ref: '#/components/schemas/SubnetArray'
         '401':
           description: Authorization information is missing or invalid.
-  /topology/subnet/{subnetId}:
+  '/topology/subnet/{subnetId}':
     get:
       tags:
         - Subnet
@@ -209,7 +183,7 @@ paths:
                 $ref: '#/components/schemas/NodeArray'
         '401':
           description: Authorization information is missing or invalid.
-  /topology/node/{nodeId}:
+  '/topology/node/{nodeId}':
     get:
       tags:
         - Node
@@ -318,7 +292,7 @@ paths:
                 $ref: '#/components/schemas/LtpArray'
         '401':
           description: Authorization information is missing or invalid.
-  /topology/ltp/{ltpId}:
+  '/topology/ltp/{ltpId}':
     get:
       tags:
         - Link Termination Point (LTP)
@@ -427,7 +401,7 @@ paths:
                 $ref: '#/components/schemas/LinkArray'
         '401':
           description: Authorization information is missing or invalid.
-  /topology/link/{linkId}:
+  '/topology/link/{linkId}':
     get:
       tags:
         - Link
@@ -897,7 +871,7 @@ paths:
                 $ref: '#/components/schemas/NodeArray'
         '401':
           description: Authorization information is missing or invalid.
-  /topology/subnet/{subnetId}/links:
+  '/topology/subnet/{subnetId}/links':
     get:
       tags:
         - Link
@@ -1083,9 +1057,10 @@ components:
       properties:
         name:
           type: string
-          description: 'A unique formatted name: "sX" for Subnet, "sX:nY" for Node,
+          description: >-
+            A unique formatted name: "sX" for Subnet, "sX:nY" for Node,
             "sX:nY:lZ" for LTP, "sX:nY:lZ=sP:nQ:lR" for Link, where X,Y,Z,P,Q,R
-            are integers.'
+            are integers.
         label:
           type: string
           description: 'Client-defined string (e.g., switch1).'
@@ -1094,7 +1069,7 @@ components:
           description: 'Client-defined short text (e.g., switch of floor 1).'
         info:
           type: object
-          description: JSON object that includes any additional info.
+          description: JSON object that includes any additional info
     Subnet:
       description: Minimal Subnet object for creation.
       allOf:
@@ -1153,7 +1128,7 @@ components:
             - DISCONN
         type:
           type: string
-          description: 'Type of the Node (switch, router, forwarder, etc.).'
+          description: 'Type of the Node (switch, router, forwarder, etc.)'
         posx:
           type: integer
           description: X position on the map.
@@ -1210,7 +1185,6 @@ components:
           required:
             - vnodeId
             - busy
-            - port
           properties:
             vnodeId:
               type: integer
@@ -1218,9 +1192,6 @@ components:
             busy:
               type: boolean
               description: Whether the LTP has a physical link or not.
-            port:
-              type: string
-              description: MAC address of the LTP.
     LtpConcise:
       description: LTP object without contained CTPs.
       allOf:
@@ -1270,9 +1241,21 @@ components:
         - $ref: '#/components/schemas/CommonFields'
         - type: object
           required:
+            - macAddress
+            - accessVlan
+            - ipAdress
             - vlinkId
             - vltpId
           properties:
+            macAddress:
+              type: string
+              description: mac address of the CTP (e.g., a1b2.c3d4.e5f6).
+            accessVlan:
+              type: integer
+              description: Vlan ID assigned to the CTP.
+            ipAddress:
+              type: string
+              description: IP adress assigned to the CTP
             vlinkId:
               type: integer
               description: ID of the Link that carries the connection.
